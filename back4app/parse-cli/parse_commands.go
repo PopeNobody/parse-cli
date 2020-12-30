@@ -34,7 +34,6 @@ http://parse.com`,
 	c.AddCommand(parsecmd.NewDevelopCmd(e))
 	c.AddCommand(parsecmd.NewDownloadCmd(e))
 	c.AddCommand(webhooks.NewFunctionHooksCmd(e))
-	c.AddCommand(parsecmd.NewGenerateCmd(e))
 	c.AddCommand(parsecmd.NewJsSdkCmd(e))
 	c.AddCommand(NewListCmd(e))
 	c.AddCommand(parsecmd.NewLogsCmd(e))

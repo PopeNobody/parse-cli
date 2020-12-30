@@ -88,7 +88,7 @@ func (l *logsCmd) round(e *parsecli.Env, c *parsecli.Context, startTime *parseTi
 	}
 	// logs come back in reverse
 	for i := len(rows) - 1; i >= 0; i-- {
-		fmt.Fprintln(e.Out, rows[i].Message)
+    fmt.Fprintln(e.Out, "%s: %s", rows[i].Timestamp, rows[i].Message)
 	}
 	if len(rows) > 0 {
 		return &rows[0].Timestamp, nil
