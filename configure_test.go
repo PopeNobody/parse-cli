@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ParsePlatform/parse-cli/parsecli"
+	"github.com/back4app/parse-cli/parsecli"
 	"github.com/facebookgo/ensure"
 )
 
@@ -32,7 +32,7 @@ Input your account key or press ENTER to generate a new one.
 	ensure.Err(t, c.accountKey(h.Env), regexp.MustCompile("is not valid"))
 	ensure.DeepEqual(t,
 		h.Err.String(),
-		"Could not store credentials. Please try again.\n\n",
+		"Could not store credentials. Please try again.\n",
 	)
 
 	h.Env.Server = "http://api.parse.com/1/"

@@ -20,7 +20,7 @@ import (
 	"github.com/skratchdot/open-golang/open"
 )
 
-const keysURL = "https://www.parse.com/account/keys"
+const keysURL = "http://dashboard.back4app.com/classic#/wizard/account-key"
 
 type Credentials struct {
 	Email    string
@@ -36,7 +36,7 @@ type Login struct {
 var (
 	errAuth = errors.New(`Sorry, we do not have a user with this username and password.
 If you do not remember your password, please follow instructions at:
-  https://www.parse.com/login
+  http://back4app.com/password/forgot
 to reset your password`)
 
 	tokenErrMsgf = `Sorry, the account key: %q you provided is not valid.
@@ -44,7 +44,7 @@ Please follow instructions at %q to generate a new one.
 `
 	keyNotConfigured = regexp.MustCompile("Account key not configured")
 
-	parseNetrc = filepath.Join(".parse", "netrc")
+	parseNetrc = filepath.Join(".back4app", "netrc")
 )
 
 func accountKeyNotConfigured(err error) bool {
@@ -79,6 +79,7 @@ func (l *Login) populateCreds(e *Env) error {
 	if password != "" {
 		l.Credentials.Password = password
 	}
+
 	return nil
 }
 
@@ -241,25 +242,18 @@ func (l *Login) AuthUserWithToken(e *Env, strict bool) (string, error) {
 		// user never created an account key: educate them
 		if stackerr.HasUnderlying(err, stackerr.MatcherFunc(os.IsNotExist)) {
 			if strict {
-				fmt.Fprintln(
-					e.Out,
-					`To proceed further, you must configure an account key.
-`,
-				)
+				fmt.Fprintln(e.Out, `To proceed further, you must configure an account key.`,)
 			} else {
-				fmt.Fprintln(
-					e.Out,
-					`We've changed the way the CLI works.
-To save time logging in, you should create an account key.
-`,
+				fmt.Fprintln(e.Out, `We've changed the way the CLI works.
+To save time logging in, you should create an account key.`,
 				)
 
 			}
 
 			fmt.Fprintln(
 				e.Out,
-				`Type "parse configure accountkey" to create a new account key.
-Read more at: https://parse.com/docs/cloudcode/guide#command-line-account-keys`)
+				`Type "b4a configure accountkey" to create a new account key.
+Read more at: http://docs.back4app.com/docs/integrations/command-line-interface/account-keys/`)
 			return "", stackerr.New("Account key not configured")
 		}
 
@@ -288,10 +282,10 @@ func (l *Login) AuthUser(e *Env, strict bool) error {
 	if !stackerr.HasUnderlying(err, stackerr.MatcherFunc(accountKeyNotConfigured)) {
 		fmt.Fprintln(
 			e.Out,
-			`Type "parse configure accountkey" to create a new account key.
-Read more at: https://parse.com/docs/cloudcode/guide#command-line-account-keys
+			`Type "b4a configure accountkey" to create a new account key.
+Read more at: http://docs.back4app.com/docs/integrations/command-line-interface/account-keys/
 
-Please login to Parse using your email and password.`,
+Please login to Back4App using your email and password.`,
 		)
 	}
 
@@ -302,6 +296,7 @@ Please login to Parse using your email and password.`,
 			return err
 		}
 		apps.Login.Credentials = l.Credentials
+
 		_, err = apps.RestFetchApps(e)
 		if err == nil {
 			return nil

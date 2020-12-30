@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/ParsePlatform/parse-cli/parsecli"
-	"github.com/ParsePlatform/parse-cli/parsecmd"
-	"github.com/ParsePlatform/parse-cli/webhooks"
+	"github.com/back4app/parse-cli/parsecli"
+	"github.com/back4app/parse-cli/parsecmd"
+	"github.com/back4app/parse-cli/webhooks"
 	"github.com/spf13/cobra"
 )
 
@@ -46,6 +46,7 @@ http://parse.com`,
 	c.AddCommand(webhooks.NewTriggerHooksCmd(e))
 	c.AddCommand(NewUpdateCmd(e))
 	c.AddCommand(NewVersionCmd(e))
+	c.AddCommand(parsecmd.NewCloudCmd(e))
 
 	if len(os.Args) <= 1 {
 		return nil, c
@@ -60,6 +61,7 @@ http://parse.com`,
 	copy(args, os.Args[1:])
 
 	if message := parsecli.MakeCorrections(commands, args); message != "" {
+    fmt.Fprintln(e.Out, "here")
 		fmt.Fprintln(e.Out, message)
 	}
 	c.SetArgs(args)

@@ -57,7 +57,8 @@ func selectionString(appNames []string) string {
 
 func (a *Apps) PrintApp(e *Env, params *App) error {
 	fmt.Fprintf(e.Out, "Properties of the app %q:\n", params.Name)
-
+  
+  fmt.Fprintf(e.Out, "%s", params)
 	w := new(tabwriter.Writer)
 	w.Init(e.Out, 0, 8, 0, '\t', 0)
 	fmt.Fprintf(w, "Name\t%s\n", params.Name)
@@ -197,7 +198,7 @@ func (a *Apps) ShowApps(e *Env, appName string) error {
 func (a *Apps) getAppName(e *Env) (string, error) {
 	var appName string
 	fmt.Fprint(e.Out, `Please choose a name for your Parse app.
-Note that this name will appear on the Parse website,
+Note that this name will appear on the Back4App website,
 but it does not have to be the same as your mobile app's public name.
 Name: `)
 	fmt.Fscanf(e.In, "%s\n", &appName)

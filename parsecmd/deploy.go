@@ -16,7 +16,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ParsePlatform/parse-cli/parsecli"
+	"github.com/back4app/parse-cli/parsecli"
 	"github.com/facebookgo/errgroup"
 	"github.com/facebookgo/jsonpipe"
 	"github.com/facebookgo/stackerr"
@@ -42,6 +42,20 @@ func (d *deployCmd) getSourceFiles(
 	suffixes map[string]struct{},
 	e *parsecli.Env,
 ) ([]string, []string, error) {
+	var selected []string
+	var ignored []string
+
+  d.Verbose=true;
+  fmt.Fprintf(e.Out,"Here we are!\n")
+	if _, err := os.Stat(dirName); os.IsNotExist(err) {
+		if d.Verbose {
+			fmt.Fprintf(e.Err,
+				"Skipping Source folder '%s' does not exist\n",
+				dirName)
+		}
+		return selected, ignored, nil
+	}
+
 	ignoreFile := filepath.Join(e.Root, parseIgnore)
 
 	content, err := ioutil.ReadFile(ignoreFile)
@@ -73,7 +87,6 @@ func (d *deployCmd) getSourceFiles(
 		return nil, nil, stackerr.Wrap(err)
 	}
 
-	var selected []string
 	errors, err = parseIgnoreWalk(matcher,
 		dirName,
 		func(path string, info os.FileInfo, err error) error {
@@ -101,7 +114,6 @@ func (d *deployCmd) getSourceFiles(
 		)
 	}
 
-	var ignored []string
 	for file := range ignoredSet {
 		ignored = append(ignored, file)
 	}
@@ -165,6 +177,8 @@ func (d *deployCmd) uploadFile(filename, endpoint string, e *parsecli.Env,
 	if err != nil {
 		return "", err
 	}
+
+  fmt.Fprintf(e.Out,"endpoint=%s=n", endpoint)
 
 	req, err := http.NewRequest(
 		"POST",
@@ -378,14 +392,9 @@ func (d *deployCmd) deploy(
 			return nil, err
 		}
 	}
-
 	scriptChecksums, scriptVersions, err := d.uploadSourceFiles(&uploader{
 		DirName: "cloud",
-		Suffixes: map[string]struct{}{
-			".js":   {},
-			".ejs":  {},
-			".jade": {},
-		},
+		Suffixes: map[string]struct{}{},
 		EndPoint:      "scripts",
 		PrevChecksums: prevDeplInfo.Checksums.Cloud,
 		PrevVersions:  prevDeplInfo.Versions.Cloud,

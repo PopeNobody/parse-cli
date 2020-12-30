@@ -7,9 +7,8 @@ import (
 	"strings"
 	"strconv"
 
-	"github.com/ParsePlatform/parse-cli/herokucmd"
-	"github.com/ParsePlatform/parse-cli/parsecli"
-	"github.com/ParsePlatform/parse-cli/parsecmd"
+	"github.com/back4app/parse-cli/parsecli"
+	"github.com/back4app/parse-cli/parsecmd"
 	"github.com/facebookgo/parse"
 	"github.com/facebookgo/stackerr"
 	"github.com/spf13/cobra"
@@ -27,9 +26,6 @@ type newCmd struct {
 
 func (n *newCmd) curlCommand(e *parsecli.Env, app *parsecli.App) string {
 	args := "{}"
-	if e.Type == parsecli.HerokuFormat {
-		args = `{"a": "Adventurous ", "b": "Parser"}`
-	}
 
 	return fmt.Sprintf(
 		`curl -X POST \
@@ -37,7 +33,7 @@ func (n *newCmd) curlCommand(e *parsecli.Env, app *parsecli.App) string {
  -H "X-Parse-REST-API-Key: %s" \
  -H "Content-Type: application/json" \
  -d %s \
- https://api.parse.com/1/functions/hello
+ https://parseapi.back4app.com/functions/hello
 `,
 		app.ApplicationID,
 		app.RestKey,
@@ -47,9 +43,7 @@ func (n *newCmd) curlCommand(e *parsecli.Env, app *parsecli.App) string {
 
 func (n *newCmd) cloudCodeHelpMessage(e *parsecli.Env, app *parsecli.App) string {
 	code := "Cloud Code"
-	if e.Type == parsecli.HerokuFormat {
-		code = "server code"
-	}
+
 	return fmt.Sprintf(
 		`Your %s has been created at %s.
 
@@ -59,7 +53,7 @@ you can test that it works, with the printed curl command.
 Next, you might want to deploy this code with:
 
 	cd %s
-	parse deploy
+	b4a deploy
 
 Once deployed you can test that it works by running:
 %s
@@ -111,7 +105,7 @@ and select the app you just created.`
 		return "", stackerr.Newf(
 			`Sorry, we are unable to create Cloud Code at %s.
 It seems that you already have Cloud Code at %s.
-Please run "parse new" again.
+Please run "b4a new" again.
 %s
 Please choose a different name for your Cloud Code directory,
 so it does not conflict with any other Cloud Code in the current directory.
@@ -130,7 +124,7 @@ so it does not conflict with any other Cloud Code in the current directory.
 		}
 		return "", stackerr.Newf(`Sorry, we are unable to create Cloud Code at %s.
 In the current directory a %s named: %q already exists.
-Please run "parse new" again.
+Please run "b4a new" again.
 %s
 Please choose a different name for your Cloud Code directory,
 so it does not conflict with any other Cloud Code in the current directory.
@@ -204,7 +198,7 @@ Please refrain from creating a Parse project inside another Parse project.
 	if nonInteractive {
 		cloudCodeDir = n.codeLocation
 	} else if n.configOnly {
-		cloudCodeDir = "" // ensures that "parse new --init" inits the current directory
+		cloudCodeDir = "" // ensures that "b4a new --init" inits the current directory
 	} else {
 		cloudCodeDir, err = n.getCloudCodeDir(e, name, isNew)
 		if err != nil {
@@ -213,19 +207,16 @@ Please refrain from creating a Parse project inside another Parse project.
 	}
 	e.Root = filepath.Join(e.Root, cloudCodeDir)
 
-	switch e.Type {
-	case parsecli.ParseFormat:
+	if e.Type == parsecli.ParseFormat {
 		if !n.configOnly {
 			var decision string
 			if isNew {
-				fmt.Fprint(e.Out, `
-You can either set up a blank project or create a sample Cloud Code project.
-Please type "(b)lank" if you wish to setup a blank project, otherwise press ENTER: `)
+				fmt.Fprintln(e.Out, "You can either set up a blank project or create a sample Cloud Code project")
 			} else {
-				fmt.Fprint(e.Out, `
-You can either set up a blank project or download the current deployed Cloud Code.
-Please type "(b)lank" if you wish to setup a blank project, otherwise press ENTER: `)
+				fmt.Fprintln(e.Out, "You can either set up a blank project or download the current deployed Cloud Code")
 			}
+			fmt.Fprintf(e.Out, `Please type "(b)lank" if you wish to setup a blank project, otherwise press ENTER: `)
+
 			fmt.Fscanf(e.In, "%s\n", &decision)
 			decision = strings.ToLower(strings.TrimSpace(decision))
 			if decision != "" && decision == "b" || decision == "blank" {
@@ -233,26 +224,8 @@ Please type "(b)lank" if you wish to setup a blank project, otherwise press ENTE
 			}
 		}
 		return parsecmd.CloneSampleCloudCode(e, isNew, n.configOnly, appConfig)
-	case parsecli.HerokuFormat:
-		if !n.configOnly {
-			var decision string
-			if isNew {
-				fmt.Fprint(e.Out, `
-You can either set up a blank project or create a sample Node.js project.
-Please type "(b)lank" if you wish to setup a blank project, otherwise press ENTER: `)
-			} else {
-				fmt.Fprint(e.Out, `
-You can either set up a blank project or download the server code currently deployed to Heroku.
-Please type "(b)lank" if you wish to setup a blank project, otherwise press ENTER: `)
-			}
-			fmt.Fscanf(e.In, "%s\n", &decision)
-			decision = strings.ToLower(strings.TrimSpace(decision))
-			if decision != "" && decision == "b" || decision == "blank" {
-				n.configOnly = true
-			}
-		}
-		return herokucmd.CloneNodeCode(e, isNew, n.configOnly, appConfig)
 	}
+
 	return false, stackerr.Newf("Unknown project type: %d", e.Type)
 }
 
@@ -331,26 +304,9 @@ func (n *newCmd) run(e *parsecli.Env) error {
 		}
 	}
 
-	projectType, err := herokucmd.PromptCreateWebhooks(e)
-	if err != nil {
-		return err
-	}
-
 	var appConfig parsecli.AppConfig
-	switch projectType {
-	case "heroku":
-		e.Type = parsecli.HerokuFormat
-		var newHerokuApp bool
-		newHerokuApp, appConfig, err = herokucmd.GetLinkedHerokuAppConfig(app, e)
-		if err != nil {
-			return err
-		}
-		isNew = isNew || newHerokuApp
-
-	case "parse":
-		e.Type = parsecli.ParseFormat
-		appConfig = parsecmd.GetParseAppConfig(app)
-	}
+	e.Type = parsecli.ParseFormat
+	appConfig = parsecmd.GetParseAppConfig(app)
 
 	dumpTemplate, err := n.setupSample(e, app.Name, appConfig, isNew, nonInteractive)
 	if err != nil {

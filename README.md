@@ -1,32 +1,29 @@
-> ## WARNING ⚠️ - this project has been retired due to lack of use & contribution, if you wish to continue to use it please fork or if you wish to maintain this project make yourself known ⚠️
-
 Parse Command Line Tool
 =======
-[![Build Status](https://travis-ci.org/parse-community/parse-cli.svg?branch=master)](https://travis-ci.org/parse-community/parse-cli)
-[![Join The Conversation](https://img.shields.io/discourse/https/community.parseplatform.org/topics.svg)](https://community.parseplatform.org/c/parse-server)
-[![Backers on Open Collective](https://opencollective.com/parse-server/backers/badge.svg)][open-collective-link]
-[![Sponsors on Open Collective](https://opencollective.com/parse-server/sponsors/badge.svg)][open-collective-link]
-[![License][license-svg]][license-link]
-[![Twitter Follow](https://img.shields.io/twitter/follow/ParsePlatform.svg?label=Follow%20us%20on%20Twitter&style=social)](https://twitter.com/intent/follow?screen_name=ParsePlatform)
+[![Build Status](https://travis-ci.org/back4app/parse-cli.svg?branch=back4app)](https://travis-ci.org/back4app/parse-cli)
 
 The `Parse Command Line Tool` allows you to set up your Parse app's server-side code from the terminal.
 You can deploy your server-side code to either Parse Cloud Code or Heroku Node.js.
+
+To learn more, please visit our [docs](https://parse.com/docs/cloudcode/guide).
 
 Overview
 --------
 Parse Command Line Tool can be used to perform various actions on your Parse app.
 It can be used to create new Parse apps, deploy Cloud Code to an app, view all releases for an app, etc.
 
-To install `Parse Command Line Tool`, you can just type the following command.
+You can install `Parse Command Line Tool` by following instructions at [parse-cli](https://parse.com/apps/quickstart#cloud_code/).
+
+Alternatively, you can just type the following command.
 
 NOTE: You should already have [Go](https://golang.org/doc/install) installed and GOPATH, GOROOT set to appropriate values.
 
 ```bash
-  go get -t github.com/ParsePlatform/parse-cli
+  go get -t github.com/back4app/parse-cli
 ```
 
 This installs a binary called `parse-cli` at `$GOPATH/bin`.
-Further, you can find the code for Parse CLI at: `$GOPATH/src/github.com/ParsePlatform/parse-cli`.
+Further, you can find the code for Parse CLI at: `$GOPATH/src/github.com/back4app/parse-cli`.
 
 The following commands are currently available in the `Parse Command Line Tool`:
 ```bash
@@ -51,11 +48,3 @@ The following commands are currently available in the `Parse Command Line Tool`:
   version     Gets the Command Line Tools version
   help        Help about any command
 ```
-
------
-
-As of April 5, 2017, Parse, LLC has transferred this code to the parse-community organization, and will no longer be contributing to or distributing this code.
-
-[license-svg]: https://img.shields.io/badge/license-BSD-lightgrey.svg
-[license-link]: LICENSE
-[open-collective-link]: https://opencollective.com/parse-server

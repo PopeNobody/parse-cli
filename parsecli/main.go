@@ -14,7 +14,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bgentry/heroku-go"
 	"github.com/facebookgo/clock"
 	"github.com/facebookgo/ensure"
 	"github.com/facebookgo/parse"
@@ -22,10 +21,10 @@ import (
 )
 
 const (
-	Version        = "3.0.5"
+	Version        = "3.3.1"
 	CloudDir       = "cloud"
 	HostingDir     = "public"
-	DefaultBaseURL = "https://api.parse.com/1/"
+	DefaultBaseURL = "https://parsecli.back4app.com/"
 )
 
 var UserAgent = fmt.Sprintf("parse-cli-%s-%s", runtime.GOOS, Version)
@@ -42,7 +41,6 @@ type Env struct {
 	Exit            func(int)
 	Clock           clock.Clock
 	ParseAPIClient  *ParseAPIClient
-	HerokuAPIClient *heroku.Client
 }
 
 type Harness struct {
@@ -83,6 +81,7 @@ func NewHarness(t testing.TB) *Harness {
 		Clock:          te.Clock,
 		ParseAPIClient: &ParseAPIClient{APIClient: &parse.Client{}},
 	}
+  fmt.Fprintf(te.Env.Out,"created env\n");
 	return &te
 }
 

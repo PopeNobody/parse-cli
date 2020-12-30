@@ -7,8 +7,8 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/ParsePlatform/parse-cli/parsecli"
-	"github.com/ParsePlatform/parse-cli/webhooks"
+	"github.com/back4app/parse-cli/parsecli"
+	"github.com/back4app/parse-cli/webhooks"
 	"github.com/facebookgo/stackerr"
 	"github.com/spf13/cobra"
 )
@@ -29,7 +29,7 @@ func (c *configureCmd) accountKey(e *parsecli.Env) error {
 
 	email, err := c.login.AuthToken(e, token)
 	if err != nil {
-		fmt.Fprintln(e.Err, "Could not store credentials. Please try again.\n")
+		fmt.Fprintln(e.Err, "Could not store credentials. Please try again.")
 		return err
 	}
 
@@ -80,17 +80,13 @@ for email: %q
 	}
 
 	if firstEverConfigure {
-		fmt.Fprintln(
-			e.Out,
-			`
-Looks like this is the first time you have configured an account key.
-Note that "parse new" and "parse list" can automatically pick up a default key if present.
+		fmt.Fprintln(e.Out, `Looks like this is the first time you have configured an account key.
+Note that "b4a new" and "b4a list" can automatically pick up a default key if present.
 Otherwise, you'll have to explicitly set the PARSER_EMAIL common.Environment variable
 for them to pick the correct account key.
 Further, if the command line tool cannot find an account key for a configured email it will try to
 use the default account key.
-Hence, we are automatically configuring the default account key to be the same as current account key.
-`,
+Hence, we are automatically configuring the default account key to be the same as current account key.`,
 		)
 		err = c.login.StoreCredentials(e, "", &parsecli.Credentials{Token: token})
 		if err != nil {
@@ -100,8 +96,7 @@ Hence, we are automatically configuring the default account key to be the same a
 		fmt.Fprintln(e.Out, `Successfully configured the default account key.
 To change the default account key in future use:
 
-       "parse configure accountkey -d"
-`)
+       "b4a configure accountkey -d"`)
 	}
 
 	return nil
@@ -139,7 +134,7 @@ func (c *configureCmd) projectType(e *parsecli.Env, args []string) error {
 	if len(args) != 0 {
 		projectType, ok := validTypes[args[0]]
 		if !ok {
-			return stackerr.Newf("Invalid projectType: %v, valid types are: \n%s", selectionString)
+			return stackerr.Newf("Invalid projectType: %v, valid types are: \n%s", projectType, selectionString)
 		}
 		selectedProjectType = projectType
 	}
@@ -160,7 +155,7 @@ Enter a number between 1 and %d: `,
 		}
 		projectType, ok := validTypes[validKeys[num-1]]
 		if !ok {
-			return stackerr.Newf("Invalid projectType: %v, valid types are: \n%s", selectionString)
+			return stackerr.Newf("Invalid projectType: %v, valid types are: \n%s", projectType, selectionString)
 		}
 		selectedProjectType = projectType
 		break
@@ -193,7 +188,7 @@ func NewConfigureCmd(e *parsecli.Env) *cobra.Command {
 	keyCmd := &cobra.Command{
 		Use:     "accountkey",
 		Short:   "Store Parse account key on machine",
-		Long:    "Stores Parse account key in ~/.parse/netrc.",
+		Long:    "Stores Parse account key in ~/.back4app/netrc.",
 		Run:     parsecli.RunNoArgs(e, c.accountKey),
 		Aliases: []string{"key"},
 	}

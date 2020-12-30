@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ParsePlatform/parse-cli/parsecli"
+	"github.com/back4app/parse-cli/parsecli"
 	"github.com/facebookgo/ensure"
 	"github.com/facebookgo/parse"
 )
@@ -467,11 +467,11 @@ func TestDeployFilesChanged(t *testing.T) {
 	expected := &deployInfo{
 		ParseVersion: "latest",
 		Checksums: deployFileData{
-			Cloud:  map[string]string{"main.js": "4ece160cc8e5e828ee718e7367cf5d37"},
+			Cloud:  map[string]string{"sample.txt": "d41d8cd98f00b204e9800998ecf8427e", "main.js": "4ece160cc8e5e828ee718e7367cf5d37"},
 			Public: map[string]string{"index.html": "9e2354a0ebac5852bc674026137c8612"},
 		},
 		Versions: deployFileData{
-			Cloud:  map[string]string{"main.js": "f2"},
+			Cloud:  map[string]string{"sample.txt": "f2", "main.js": "f2"},
 			Public: map[string]string{"index.html": "f2"},
 		},
 	}
@@ -492,9 +492,11 @@ The following files will be ignored:
 Finished uploading files
 New release is named v1 (using Parse JavaScript SDK vlatest)
 `,
-			filepath.Join(h.Env.Root, parsecli.CloudDir, "main.js"),
 			strings.Join([]string{
-				filepath.Join(h.Env.Root, parsecli.CloudDir, "sample.txt"),
+			    filepath.Join(h.Env.Root, parsecli.CloudDir, "main.js"),
+			    filepath.Join(h.Env.Root, parsecli.CloudDir, "sample.txt")},
+			    "\n"),
+			strings.Join([]string{
 				filepath.Join(h.Env.Root, parsecli.CloudDir, "test~")},
 				"\n"),
 			filepath.Join(h.Env.Root, parsecli.HostingDir, "index.html"),
@@ -511,11 +513,11 @@ func TestDeployFilesUnChanged(t *testing.T) {
 	info := &deployInfo{
 		ParseVersion: "latest",
 		Checksums: deployFileData{
-			Cloud:  map[string]string{"main.js": "4ece160cc8e5e828ee718e7367cf5d37"},
+			Cloud:  map[string]string{"sample.txt": "d41d8cd98f00b204e9800998ecf8427e", "main.js": "4ece160cc8e5e828ee718e7367cf5d37"},
 			Public: map[string]string{"index.html": "9e2354a0ebac5852bc674026137c8612"},
 		},
 		Versions: deployFileData{
-			Cloud:  map[string]string{"main.js": "f2"},
+			Cloud:  map[string]string{"sample.txt": "f2", "main.js": "f2"},
 			Public: map[string]string{"index.html": "f2"},
 		},
 	}
@@ -530,11 +532,11 @@ func TestDeployFilesUnChanged(t *testing.T) {
 	expected := &deployInfo{
 		ParseVersion: "latest",
 		Checksums: deployFileData{
-			Cloud:  map[string]string{"main.js": "4ece160cc8e5e828ee718e7367cf5d37"},
+			Cloud:  map[string]string{"sample.txt": "d41d8cd98f00b204e9800998ecf8427e", "main.js": "4ece160cc8e5e828ee718e7367cf5d37"},
 			Public: map[string]string{"index.html": "9e2354a0ebac5852bc674026137c8612"},
 		},
 		Versions: deployFileData{
-			Cloud:  map[string]string{"main.js": "f2"},
+			Cloud:  map[string]string{"sample.txt": "f2", "main.js": "f2"},
 			Public: map[string]string{"index.html": "f2"},
 		},
 	}
@@ -570,11 +572,11 @@ func TestDeployFilesNoVersion(t *testing.T) {
 	expected := &deployInfo{
 		ParseVersion: "latest",
 		Checksums: deployFileData{
-			Cloud:  map[string]string{"main.js": "4ece160cc8e5e828ee718e7367cf5d37"},
+			Cloud:  map[string]string{"sample.txt": "d41d8cd98f00b204e9800998ecf8427e", "main.js": "4ece160cc8e5e828ee718e7367cf5d37"},
 			Public: map[string]string{"index.html": "9e2354a0ebac5852bc674026137c8612"},
 		},
 		Versions: deployFileData{
-			Cloud:  map[string]string{"main.js": "f2"},
+			Cloud:  map[string]string{"sample.txt": "f2", "main.js": "f2"},
 			Public: map[string]string{"index.html": "f2"},
 		},
 	}
@@ -596,9 +598,11 @@ The following files will be ignored:
 Finished uploading files
 New release is named v1 (using Parse JavaScript SDK vlatest)
 `,
-			filepath.Join(h.Env.Root, parsecli.CloudDir, "main.js"),
 			strings.Join([]string{
-				filepath.Join(h.Env.Root, parsecli.CloudDir, "sample.txt"),
+			    filepath.Join(h.Env.Root, parsecli.CloudDir, "main.js"),
+			    filepath.Join(h.Env.Root, parsecli.CloudDir, "sample.txt")},
+             	"\n"),
+			strings.Join([]string{
 				filepath.Join(h.Env.Root, parsecli.CloudDir, "test~")},
 				"\n"),
 			filepath.Join(h.Env.Root, parsecli.HostingDir, "index.html"),
@@ -650,22 +654,22 @@ func TestDeployRetries(t *testing.T) {
 	ctx := parsecli.Context{Config: defaultParseConfig}
 	ctx.Config.GetProjectConfig().Parse.JSSDK = "latest"
 
-	ensure.Err(t, d.run(h.Env, &ctx), regexp.MustCompile("no such file or directory"))
+	ensure.Err(t, d.run(h.Env, &ctx), regexp.MustCompile("No files to upload"))
 	ensure.DeepEqual(t, h.Err.String(), "")
 
 	h.Err.Reset()
 	d.Retries = 2
-	ensure.Err(t, d.run(h.Env, &ctx), regexp.MustCompile("no such file or directory"))
+	ensure.Err(t, d.run(h.Env, &ctx), regexp.MustCompile("No files to upload"))
 	ensure.DeepEqual(
 		t,
 		h.Err.String(),
-		"Deploy failed with error:\nlstat cloud: no such file or directory\nWill retry in 0 seconds.\n\n",
+		"Deploy failed with error:\nNo files to upload\nWill retry in 0 seconds.\n\n",
 	)
 
 	h.Err.Reset()
 	d.Retries = 5
-	ensure.Err(t, d.run(h.Env, &ctx), regexp.MustCompile("no such file or directory"))
-	errStr := "Deploy failed with error:\nlstat cloud: no such file or directory\nWill retry in 0 seconds.\n\n"
+	ensure.Err(t, d.run(h.Env, &ctx), regexp.MustCompile("No files to upload"))
+	errStr := "Deploy failed with error:\nNo files to upload\nWill retry in 0 seconds.\n\n"
 	errStr += strings.Repeat("Sorry, deploy failed again with same error.\nWill retry in 0 seconds.\n\n", 3)
 	ensure.DeepEqual(t, h.Err.String(), errStr)
 }

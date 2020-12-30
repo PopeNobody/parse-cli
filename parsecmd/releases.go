@@ -8,7 +8,7 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/ParsePlatform/parse-cli/parsecli"
+	"github.com/back4app/parse-cli/parsecli"
 	"github.com/facebookgo/stackerr"
 	"github.com/spf13/cobra"
 )
@@ -52,7 +52,7 @@ func (r *releasesCmd) printFiles(version string,
 	}
 	if files == "" {
 		return stackerr.Newf(`Unable to fetch files for release version: %s
-Note that you can list files for all releases shown in "parse releases"`,
+Note that you can list files for all releases shown in "b4a releases"`,
 			version)
 	}
 	var versionFileNames userFiles
