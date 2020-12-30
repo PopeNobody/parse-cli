@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"text/tabwriter"
 
-	"github.com/ParsePlatform/parse-cli/parsecli"
+	"github.com/back4app/parse-cli/parsecli"
 	"github.com/bgentry/heroku-go"
 	"github.com/facebookgo/stackerr"
 	"github.com/spf13/cobra"

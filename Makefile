@@ -1,2 +1,2 @@
 all:
-	go build
+	cd back4app/parse-cli && go build

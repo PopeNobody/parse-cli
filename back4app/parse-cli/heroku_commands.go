@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/ParsePlatform/parse-cli/herokucmd"
-	"github.com/ParsePlatform/parse-cli/parsecli"
-	"github.com/ParsePlatform/parse-cli/webhooks"
+	"github.com/back4app/parse-cli/herokucmd"
+	"github.com/back4app/parse-cli/parsecli"
+	"github.com/back4app/parse-cli/webhooks"
 	"github.com/spf13/cobra"
 )
 
