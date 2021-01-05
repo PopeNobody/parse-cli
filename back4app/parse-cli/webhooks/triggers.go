@@ -62,9 +62,9 @@ func readTriggerParams(e *parsecli.Env, params *triggerHook) (*triggerHook, erro
 	if err != nil {
 		return nil, err
 	}
-	fmt.Fprint(e.Out, "URL: https://")
+	fmt.Fprint(e.Out, "URL: http://")
 	fmt.Fscanf(e.In, "%s\n", &t.URL)
-	t.URL = "https://" + t.URL
+	t.URL = "http://" + t.URL
 	if err := validateURL(t.URL); err != nil {
 		return nil, err
 	}

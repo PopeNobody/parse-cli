@@ -24,7 +24,7 @@ const (
 	Version        = "3.3.1"
 	CloudDir       = "cloud"
 	HostingDir     = "public"
-	DefaultBaseURL = "https://parsecli.back4app.com/"
+	DefaultBaseURL = "http://parsecli.back4app.com/"
 )
 
 var UserAgent = fmt.Sprintf("parse-cli-%s-%s", runtime.GOOS, Version)
@@ -113,6 +113,7 @@ func NewTokenHarness(t testing.TB) *Harness {
 		key := &struct {
 			AccountKey string `json:"accountKey"`
 		}{}
+      fmt.Printf("creating Decoder 2")
 		ensure.Nil(t, json.NewDecoder(ioutil.NopCloser(r.Body)).Decode(key))
 
 		if key.AccountKey != "token" {
@@ -133,7 +134,7 @@ func NewTokenHarness(t testing.TB) *Harness {
 
 func NewAppHarness(t testing.TB) (*Harness, []*App) {
 	h := NewHarness(t)
-
+  
 	apps := []*App{
 		newTestApp("A"),
 		newTestApp("B"),
@@ -168,6 +169,7 @@ func NewAppHarness(t testing.TB) (*Harness, []*App) {
 			}
 
 			var params map[string]string
+      fmt.Printf("creating Decoder 1")
 			if err := json.NewDecoder(r.Body).Decode(&params); err != nil {
 				return &http.Response{
 					StatusCode: http.StatusInternalServerError,
@@ -205,7 +207,7 @@ func NewAppHarness(t testing.TB) (*Harness, []*App) {
 func newTestApp(suffix string) *App {
 	return &App{
 		Name:                          suffix,
-		DashboardURL:                  fmt.Sprintf("https://api.example.com/dashboard/%s", suffix),
+		DashboardURL:                  fmt.Sprintf("http://api.example.com/dashboard/%s", suffix),
 		ApplicationID:                 fmt.Sprintf("applicationID.%s", suffix),
 		ClientKey:                     fmt.Sprintf("clientKey.%s", suffix),
 		JavaScriptKey:                 fmt.Sprintf("javaScriptKey.%s", suffix),

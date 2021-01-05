@@ -12,9 +12,11 @@ import (
 	"github.com/back4app/parse-cli/parsecli"
 	"github.com/facebookgo/clock"
 	"github.com/facebookgo/stackerr"
+  "github.com/davecgh/go-spew/spew"
 )
 
 func main() {
+  spew.Config.Indent="   "
 	// some parts of apps.go are unable to handle
 	// interrupts, this logic ensures we exit on system interrupts
 	interrupt := make(chan os.Signal, 1)
@@ -79,6 +81,7 @@ func main() {
 
 	if len(command) == 0 || command[0] != "update" {
 		message, err := checkIfSupported(&e, parsecli.Version, mode, command...)
+    fmt.Printf("message: ", message)
 		if err != nil {
 			fmt.Fprintln(e.Err, err)
 			os.Exit(1)
@@ -95,6 +98,9 @@ func main() {
 }
 
 func checkIfSupported(e *parsecli.Env, version string, mode string, args ...string) (string, error) {
+  if(len(args)== 0) {
+    args= [] string { "help" }
+  };
 	v := make(url.Values)
 	v.Set("version", version)
 	v.Set("mode", mode)
@@ -109,6 +115,7 @@ func checkIfSupported(e *parsecli.Env, version string, mode string, args ...stri
 		err     error
 	}
 
+  spew.Dump(req);
 	timeout := make(chan *result, 1)
 	go func() {
 		var res struct {

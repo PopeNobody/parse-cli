@@ -3,3 +3,6 @@ all:
 
 clean:
 	go clean
+
+tags:
+	find ../../.. -name '*.go' | ctags -L -

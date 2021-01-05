@@ -24,8 +24,8 @@ func validateURL(urlStr string) error {
 		return stackerr.Wrap(err)
 	}
 
-	if netURL.Scheme != "https" {
-		return errors.New("Please enter a valid https url")
+	if netURL.Scheme != "http" {
+		return errors.New("Please enter a valid http url")
 	}
 	return nil
 }

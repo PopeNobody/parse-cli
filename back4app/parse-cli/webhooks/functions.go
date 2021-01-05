@@ -64,9 +64,9 @@ func readFunctionParams(e *parsecli.Env, params *functionHook) (*functionHook, e
 		return nil, err
 	}
 
-	fmt.Fprint(e.Out, "URL: https://")
+	fmt.Fprint(e.Out, "URL: http://")
 	fmt.Fscanf(e.In, "%s\n", &f.URL)
-	f.URL = "https://" + f.URL
+	f.URL = "http://" + f.URL
 	if err := validateURL(f.URL); err != nil {
 		return nil, err
 	}
