@@ -57,8 +57,7 @@ func selectionString(appNames []string) string {
 
 func (a *Apps) PrintApp(e *Env, params *App) error {
 	fmt.Fprintf(e.Out, "Properties of the app %q:\n", params.Name)
-  
-  fmt.Fprintf(e.Out, "%s", params)
+
 	w := new(tabwriter.Writer)
 	w.Init(e.Out, 0, 8, 0, '\t', 0)
 	fmt.Fprintf(w, "Name\t%s\n", params.Name)

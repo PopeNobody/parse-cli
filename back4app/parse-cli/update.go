@@ -18,7 +18,7 @@ const (
 	windowsDownload   = "b4a.exe"
 	linuxDownload     = "b4a_linux"
 	linuxArmDownload  = "b4a_linux_arm"
-	downloadURLFormat = "http://github.com/back4app/parse-cli/releases/download/release_%s/%s"
+	downloadURLFormat = "https://github.com/back4app/parse-cli/releases/download/release_%s/%s"
 )
 
 type updateCmd struct{}

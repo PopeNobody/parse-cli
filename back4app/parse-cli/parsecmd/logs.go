@@ -6,7 +6,6 @@ import (
 	"net/url"
 	"strings"
 	"time"
-//  "os"
 
 	"github.com/back4app/parse-cli/parsecli"
 	"github.com/facebookgo/stackerr"
@@ -89,10 +88,7 @@ func (l *logsCmd) round(e *parsecli.Env, c *parsecli.Context, startTime *parseTi
 	}
 	// logs come back in reverse
 	for i := len(rows) - 1; i >= 0; i-- {
-    temp := strings.Split(rows[i].Message, "\n")
-    for j:= 0; j < len(temp); j++ {
-      fmt.Fprintf(e.Out, "%s: %s\n", rows[i].Timestamp,temp[j])
-    };
+		fmt.Fprintln(e.Out, rows[i].Message)
 	}
 	if len(rows) > 0 {
 		return &rows[0].Timestamp, nil

@@ -45,8 +45,6 @@ func (d *deployCmd) getSourceFiles(
 	var selected []string
 	var ignored []string
 
-  d.Verbose=true;
-  fmt.Fprintf(e.Out,"Here we are!\n")
 	if _, err := os.Stat(dirName); os.IsNotExist(err) {
 		if d.Verbose {
 			fmt.Fprintf(e.Err,
@@ -177,8 +175,6 @@ func (d *deployCmd) uploadFile(filename, endpoint string, e *parsecli.Env,
 	if err != nil {
 		return "", err
 	}
-
-  fmt.Fprintf(e.Out,"endpoint=%s=n", endpoint)
 
 	req, err := http.NewRequest(
 		"POST",

@@ -33,7 +33,7 @@ func (n *newCmd) curlCommand(e *parsecli.Env, app *parsecli.App) string {
  -H "X-Parse-REST-API-Key: %s" \
  -H "Content-Type: application/json" \
  -d %s \
- http://parseapi.back4app.com/functions/hello
+ https://parseapi.back4app.com/functions/hello
 `,
 		app.ApplicationID,
 		app.RestKey,

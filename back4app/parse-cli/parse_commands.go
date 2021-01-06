@@ -34,6 +34,7 @@ http://parse.com`,
 	c.AddCommand(parsecmd.NewDevelopCmd(e))
 	c.AddCommand(parsecmd.NewDownloadCmd(e))
 	c.AddCommand(webhooks.NewFunctionHooksCmd(e))
+	c.AddCommand(parsecmd.NewGenerateCmd(e))
 	c.AddCommand(parsecmd.NewJsSdkCmd(e))
 	c.AddCommand(NewListCmd(e))
 	c.AddCommand(parsecmd.NewLogsCmd(e))
@@ -60,7 +61,6 @@ http://parse.com`,
 	copy(args, os.Args[1:])
 
 	if message := parsecli.MakeCorrections(commands, args); message != "" {
-    fmt.Fprintln(e.Out, "here")
 		fmt.Fprintln(e.Out, message)
 	}
 	c.SetArgs(args)

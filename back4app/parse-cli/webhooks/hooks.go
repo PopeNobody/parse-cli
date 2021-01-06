@@ -57,8 +57,8 @@ func validateURL(urlStr string) error {
 		return stackerr.Wrap(err)
 	}
 
-	if netURL.Scheme != "http" {
-		return errors.New("Please enter a valid http url")
+	if netURL.Scheme != "https" {
+		return errors.New("Please enter a valid https url")
 	}
 	return nil
 }
@@ -335,8 +335,8 @@ func (h *Hooks) parseBaseURL(e *parsecli.Env) error {
 			fmt.Fprintln(e.Err, "Invalid base webhook url provided")
 			return stackerr.Wrap(err)
 		}
-		if u.Scheme != "http" {
-			return stackerr.New("Please provide a valid http url")
+		if u.Scheme != "https" {
+			return stackerr.New("Please provide a valid https url")
 		}
 		h.baseWebhookURL = u
 	}

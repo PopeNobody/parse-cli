@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	osxSymbolConverterDownloadURL = "http://www.parse.com/downloads/cloud_code/parse_symbol_converter"
+	osxSymbolConverterDownloadURL = "https://www.parse.com/downloads/cloud_code/parse_symbol_converter"
 	osxSymbolConverterVersion     = "1.0.2"
 )
 
